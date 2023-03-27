@@ -10,6 +10,11 @@ public class Game  extends JPanel implements Runnable, KeyListener, MouseListene
 	
 	private BufferedImage back; 
 	private int key; 
+	private String gameState;
+	private String 
+	private String 
+	private Player leon;
+	
 	
 	public Game() {
 		new Thread(this).start();	
@@ -17,7 +22,8 @@ public class Game  extends JPanel implements Runnable, KeyListener, MouseListene
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 		key =-1; 
-		
+		gameState="start";
+		leon = new Player(400, 300);
 	}
 
 	//test
@@ -57,10 +63,25 @@ public class Game  extends JPanel implements Runnable, KeyListener, MouseListene
 	
 		g2d.clearRect(0,0,getSize().width, getSize().height);
 		
-		g2d.setFont( new Font("SANS_SERIF", Font.BOLD, 50));
+		g2d.setFont( new Font("SANS_SERIF", Font.BOLD, 20));
 		
-		g2d.drawString(String.valueOf(key)+" testing font", 400, 400);
+		g2d.drawString(String.valueOf(key)+" testing font", 50, 110);
 		
+		
+		if(playerMoveVertical=="up"){
+			leon.move("y",-1);
+		}
+		if(playerMoveVertical=="down"){
+			leon.move("y",1);
+		}
+		if(playerMoveHorizontal=="left"){
+			leon.move("x",-1);
+		}
+		if(playerMoveHorizontal=="right"){
+			leon.move("x",1);
+		}
+
+		g2d.fillRect(leon.getX(), leon.getY(), leon.getW(), leon.getH());
 		
 		
 		twoDgraph.drawImage(back, null, 0, 0);
@@ -88,14 +109,23 @@ public class Game  extends JPanel implements Runnable, KeyListener, MouseListene
 		// TODO Auto-generated method stub
 		key= e.getKeyCode();
 		System.out.println(key);
-		
+		if (key==87){ //W
+			
+		}
+		if (key==83){ //S
+			
+		}
+		if (key==65){ //A
+			
+		}
+		if (key==68){ //D
+			
+		}
 		
 		
 	
 	}
-	public void movement() {
-		
-	}
+	
 
 	//DO NOT DELETE
 	@Override
@@ -148,7 +178,7 @@ public class Game  extends JPanel implements Runnable, KeyListener, MouseListene
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 

@@ -4,8 +4,8 @@ import java.awt.Component;
 import javax.swing.JFrame;
 
 public class Main extends JFrame{
-	private static final int WIDTH =1800;
-	private static final int HEIGHT=1000;
+	private static final int WIDTH =1000;
+	private static final int HEIGHT=800;
 	
 	public Main () {
 		super("Timewinder");
