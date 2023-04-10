@@ -14,6 +14,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	private int playerVspeed;
 	private int playerHspeed;
 	private ArrayList <PlayerProj> playerBullets;
+	private PlayerProj qqq;
 
 	
 	private boolean left;
@@ -27,7 +28,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	int px;
 	int py;
 
-
+	
 	
 	public Game() {
 		new Thread(this).start();	
@@ -35,7 +36,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 		key =-1; 
-		gameState="start";
+		gameState="test room";
 		playerHspeed = 0; //player's horizontal speed
 		playerVspeed = 0; //player's vertical 
 		boolean left = false;
@@ -46,8 +47,10 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		playerBullets = new ArrayList<PlayerProj>();
 
 		leon = new Player(400, 300);
-		
-		SPEED = 5;
+		qqq = new PlayerProj(0,0);
+
+
+		SPEED = 2;
 	}
 
 	//
@@ -86,24 +89,13 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	
 		g2d.clearRect(0,0,getSize().width, getSize().height);
 		
-		g2d.setFont( new Font("SANS_SERIF", Font.BOLD, 20));
-		
+		if(gameState=="test room"){
+			g2d.setFont( new Font("SANS_SERIF", Font.BOLD, 20));
 		g2d.drawString(String.valueOf(key)+" testing font", 50, 110);
-		
-		if(left==true){
-			leon.move("x",-1*SPEED);
-		}
-		if(right==true){
-			leon.move("x",SPEED);
-		}
-		if(up==true){
-			leon.move("y",-1*SPEED);
-		}
-		if(down==true){
-			leon.move("y",SPEED);
-		}
 		drawPlayer(g2d);
 		drawPlayerBullets(g2d);
+		}
+		
 
 		
 		
@@ -118,6 +110,19 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	private void drawPlayer(Graphics g2d){
 		g2d.fillRect(leon.getX(), leon.getY(), leon.getW(), leon.getH());
 		
+		if(left==true){
+			leon.move("x",-1*SPEED);
+		}
+		if(right==true){
+			leon.move("x",SPEED);
+		}
+		if(up==true){
+			leon.move("y",-1*SPEED);
+		}
+		if(down==true){
+			leon.move("y",SPEED);
+		}
+
 		if(leon.getX()<10) leon.setX(10);
 		if(leon.getX()+leon.getW()>980) leon.setX(980-leon.getW());
 		if(leon.getY()<10) leon.setY(10);
@@ -125,7 +130,8 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	}
 	
 	private void drawPlayerBullets(Graphics g2d){
-		for(PlayerProj i: playerBullets){
+		for(PlayerProj i : playerBullets){
+			i.moveBullets();
 			g2d.fillOval(i.getX(),i.getY(),i.getW(),i.getH());
 		}
 		
@@ -213,7 +219,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		py = e.getY();
 		System.out.println(px+", "+py);
 
-		playerBullets.add(new PlayerProj(leon.getCX(), leon.getCY()));
+		playerBullets.add(new PlayerProj(leon.getCX(qqq), leon.getCY(qqq)));
 		//bug
 		playerBullets.get(playerBullets.size()-1).setBulletTrajectory(leon,px,py);
 

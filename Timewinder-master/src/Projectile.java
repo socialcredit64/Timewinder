@@ -23,12 +23,18 @@ public class Projectile {
 		dy=0;
 	}
 
-    public int getX() {
+	public int getX() {
 		return x;
 	}
 	public int getY() {
 		return y;
 	}
+    /*public double getX() {
+		return x;
+	}
+	public double getY() {
+		return y;
+	}*/
 	public int getW() {
 		return w;
 	}
@@ -63,12 +69,22 @@ public class Projectile {
 	}
 
     public void setBulletTrajectory(Character c, int MPosX, int MPosY){
-        vx = Math.abs(MPosX-c.getCX());
-		vy = Math.abs(MPosY-c.getCY());
-		ux = vx/(Math.sqrt(Math.pow(vx, 2)+Math.pow(vy, 2)));
-		uy = vy/(Math.sqrt(Math.pow(vx, 2)+Math.pow(vy, 2)));
+        vx = MPosX-c.getCX(this);
+		vy = MPosY-c.getCY(this);
+		
+			
+		ux = vx*5/(Math.sqrt(Math.pow(vx, 2)+Math.pow(vy, 2)));
+		uy = vy*5/(Math.sqrt(Math.pow(vx, 2)+Math.pow(vy, 2)));
+			
+			
+				
+	}
+		
 
-		//x += ux;
-		//y += uy;
-    }
+		
+    
+	public void moveBullets(){
+		x += ux;
+		y += uy;
+	}
 }

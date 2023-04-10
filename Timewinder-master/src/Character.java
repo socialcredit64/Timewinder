@@ -26,8 +26,7 @@ public class Character {
         dy=1;
         hp=36;
         sprite = i;
-		cx=(x+w)/2;
-		cy=(y+h)/2;
+		
     }
 
     public void move(String direction, int amount){
@@ -51,10 +50,12 @@ public class Character {
 	public int getH() {
 		return h;
 	}
-	public int getCX() {
+	public int getCX(Projectile p) {
+		cx=x+(w/2)-(p.getW()/2);
 		return cx;
 	}
-	public int getCY() {
+	public int getCY(Projectile p) {
+		cy=y+(h/2)-(p.getH()/2);
 		return cy;
 	}
 	public ImageIcon getImage() {
