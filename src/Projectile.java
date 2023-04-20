@@ -22,6 +22,8 @@ public class Projectile {
 		dx=0;
 		dy=0;
 		dmg=7;
+		t=0;
+		cd=false;
 	}
 	public Projectile(int xV, int yV, int damage) { //enemy projectile
 		x=xV;
@@ -71,6 +73,8 @@ public class Projectile {
         }
         
     }
+
+
 
     public boolean collision(Character c) {
 		Rectangle character = new Rectangle(c.getX(), c.getY(), c.getW(), c.getH());

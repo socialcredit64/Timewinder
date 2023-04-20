@@ -1,7 +1,8 @@
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage; 
+import java.awt.image.BufferedImage;
+import java.io.Console;
 import java.awt.event.*; 
 import java.util.ArrayList;
 
@@ -56,6 +57,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
 		testroomEnemies = new ArrayList<Enemy>();
 		testroomEnemies.add(new Enemy(600,300,10));
+		testroomEnemies.add(new Enemy(200,300,100));
 	}
 
 	//
@@ -96,10 +98,9 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		
 		if(gameState=="test room"){
 			
+			
+
 			g2d.setColor(new Color(17, 17, 17));
-			g2d.drawRect(0, 0, 1000, 800);
-
-
 			g2d.setFont( new Font("SANS_SERIF", Font.BOLD, 20));
 			g2d.drawString(String.valueOf(key)+" testing font", 50, 110);
 		
@@ -169,14 +170,16 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			g2d.setColor(new Color(55, 55, 255));
 			g2d.fillRect(e.getX(), e.getY(), e.getW(), e.getH());
 			
-			//g2d.drawRect(e.getX(), e.getY()-13, e.getW(), 5);
-			//g2d.fillRect(e.getX(), e.getY()-13, e.getW()*(e.getHP()/e.getMaxHP()), 5);
+			g2d.drawRect(e.getX(), e.getY()-13, e.getW(), 5);
+			g2d.fillRect(e.getX(), e.getY()-13, e.getW()*(e.getHP()/e.getMaxHP()), 5);
 			
 			
 			for(PlayerProj pbullet: playerBullets){
 				if(pbullet.collision(e)){
+				
 					e.reduceHP(pbullet.getDMG());
 					playerBullets.remove(pbullet);
+					
 					if(e.getHP()<0){
 						enemy.remove(e);
 					}
