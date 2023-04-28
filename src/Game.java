@@ -134,6 +134,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			g2d.drawImage(titleScreen.getImage().getImage(), titleScreen.getX(), titleScreen.getY(), titleScreen.getW(), titleScreen.getH(), this);
 		}
 		
+		
 
 		
 		++time;
@@ -177,7 +178,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		for(EnemyProj ebullet: enemy){
 			if(ebullet.collision(leon)){
 				leon.reduceHP(ebullet.getDMG());
-				ebullet.remove();
+				enemy.remove(ebullet);
 			}
 		}
 
@@ -241,6 +242,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 				
 					e.reduceHP(pbullet.getDMG());
 					//write code for remove bullet
+
 					
 					if(e.getHP()<0){
 						enemy.remove(e);
