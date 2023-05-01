@@ -181,6 +181,9 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 				enemy.remove(ebullet);
 			}
 		}
+		if(leon.getHP()<0){
+			//le
+		}
 
 		g2d.drawString(String.valueOf(leon.getHP()),20,600);
 			
