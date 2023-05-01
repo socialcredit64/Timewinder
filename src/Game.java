@@ -103,6 +103,8 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	
 		g2d.clearRect(0,0,getSize().width, getSize().height);
 		
+		gameState="menu";
+		
 		if(gameState=="test room"){
 			
 			
@@ -133,6 +135,9 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			g2d.drawString("timewinder (alpha build)", 50, 110);*/
 			g2d.drawImage(titleScreen.getImage().getImage(), titleScreen.getX(), titleScreen.getY(), titleScreen.getW(), titleScreen.getH(), this);
 		}
+		if(gameState=="1.1"){
+
+		}
 		
 		
 
@@ -157,6 +162,8 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		g2d.setColor(Color.BLACK);
 		g2d.fillRect(leon.getX(), leon.getY(), leon.getW(), leon.getH());
 		
+		
+		
 		if(left==true){
 			leon.move("x",-1*SPEED);
 		}
@@ -180,9 +187,6 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 				leon.reduceHP(ebullet.getDMG());
 				enemy.remove(ebullet);
 			}
-		}
-		if(leon.getHP()<0){
-			//le
 		}
 
 		g2d.drawString(String.valueOf(leon.getHP()),20,600);
@@ -244,7 +248,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 				if(pbullet.collision(e)){
 				
 					e.reduceHP(pbullet.getDMG());
-					//write code for remove bullet
+					playerBullets.remove(pbullet);
 
 					
 					if(e.getHP()<0){
