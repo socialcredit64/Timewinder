@@ -1,5 +1,7 @@
 
 import javax.swing.*;
+import javax.swing.plaf.TreeUI;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.Console;
@@ -18,6 +20,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	private ArrayList <Enemy> testroomEnemies;
 	private PlayerProj qqq;
 	private EnemyProj ppp;
+	private ArrayList <EnemyProj> e04;
 
 	
 	private boolean left;
@@ -41,7 +44,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 		key =-1; 
-		gameState="test room"; 
+		
 		boolean left = false;
     	boolean up = false;
     	boolean down = false;
@@ -56,7 +59,8 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
 		//not actually a "character"
 		titleScreen = new Character(0, 0, 1000, 800, "title screen.png");
-
+		
+		gameState="0.1"; 
 
 		SPEED = 2; //player movespeed
 
@@ -95,7 +99,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	public void paint(Graphics g){
 		
 		Graphics2D twoDgraph = (Graphics2D) g; 
-		if( back ==null)
+		if( back == null)
 			back=(BufferedImage)( (createImage(getWidth(), getHeight()))); 
 		
 
@@ -103,7 +107,6 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	
 		g2d.clearRect(0,0,getSize().width, getSize().height);
 		
-		gameState="menu";
 		
 		if(gameState=="test room"){
 			
@@ -113,7 +116,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			g2d.setFont( new Font("SANS_SERIF", Font.BOLD, 20));
 			g2d.drawString(String.valueOf(key)+" testing font", 50, 110);
 		
-			drawPlayer(enemybullets,g2d);
+			drawPlayer(enemybullets,g2d,400,300);
 			drawPlayerBullets(g2d);
 			drawEnemies(testroomEnemies,g2d);
 			if(willShoot(100)){
@@ -135,8 +138,12 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			g2d.drawString("timewinder (alpha build)", 50, 110);*/
 			g2d.drawImage(titleScreen.getImage().getImage(), titleScreen.getX(), titleScreen.getY(), titleScreen.getW(), titleScreen.getH(), this);
 		}
-		if(gameState=="1.1"){
-
+		
+		if(gameState=="0.1"){
+			g2d.setColor(new Color(171, 17, 17));
+			g2d.setFont( new Font("SANS_SERIF", Font.BOLD, 40));
+			g2d.drawString("Tip: Use WASD to move.",300,100);
+			drawPlayer(e04,g2d,350,700);
 		}
 		
 		
@@ -158,7 +165,16 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
 
 
-	private void drawPlayer(ArrayList<EnemyProj> enemy, Graphics g2d){
+	private void drawPlayer(ArrayList<EnemyProj> enemy, Graphics g2d, int x, int y){
+		boolean i = false;
+		
+		if(i=false){
+			leon.setX(x);
+			leon.setY(y);
+			i=true;
+		}
+		
+
 		g2d.setColor(Color.BLACK);
 		g2d.fillRect(leon.getX(), leon.getY(), leon.getW(), leon.getH());
 		
@@ -178,16 +194,19 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		}
 
 		if(leon.getX()<10) leon.setX(10);
-		if(leon.getX()+leon.getW()>980) leon.setX(980-leon.getW());
+		if(leon.getX()+leon.getW()>1000) leon.setX(1000-leon.getW());
 		if(leon.getY()<10) leon.setY(10);
-		if(leon.getY()+leon.getH()>760) leon.setY(760-leon.getH());
+		if(leon.getY()+leon.getH()>800) leon.setY(800-leon.getH());
 
-		for(EnemyProj ebullet: enemy){
-			if(ebullet.collision(leon)){
-				leon.reduceHP(ebullet.getDMG());
-				enemy.remove(ebullet);
+		if(enemy!=e04){
+			for(EnemyProj ebullet: enemy){
+				if(ebullet.collision(leon)){
+					leon.reduceHP(ebullet.getDMG());
+					enemy.remove(ebullet);
+				}
 			}
 		}
+		
 
 		g2d.drawString(String.valueOf(leon.getHP()),20,600);
 			
