@@ -1,6 +1,5 @@
 
 import javax.swing.*;
-import javax.swing.plaf.TreeUI;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -14,7 +13,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	
 	private BufferedImage back; 
 	private int key; 
-	private String gameState;
+	private int gameState;
 	private ArrayList <PlayerProj> playerBullets;
 	private ArrayList <EnemyProj> enemybullets;
 	private ArrayList <Enemy> testroomEnemies;
@@ -29,12 +28,12 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
     private boolean right;
 	
 	private int SPEED;
-	private Player leon;
+	private ArrayList <Player> leon;
 
 	private int px;
 	private int py;
 
-	private Character titleScreen;
+	private ArrayList <Background> bg;
 
 	private int time;
 	
@@ -53,14 +52,20 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		playerBullets = new ArrayList<PlayerProj>();
 		enemybullets = new ArrayList<EnemyProj>();
 
-		leon = new Player(400, 300);
+		leon = new ArrayList<Player>();
+		leon.add(new Player(400,300)); //gamestate 0
+		leon.add(new Player(0,380)); //gamestate 2
+
 		qqq = new PlayerProj(0,0);
 		ppp = new EnemyProj(0,0,0);
 
-		//not actually a "character"
-		titleScreen = new Character(0, 0, 1000, 800, "title screen.png");
+		bg = new ArrayList<Background>();
+		bg.add(new Background(new ImageIcon("smile.png")));
+		bg.add(new Background(new ImageIcon("title screen.png")));
+		bg.add(new Background(new ImageIcon("2.png")));
 		
-		gameState="0.1"; 
+		
+		gameState=0; 
 
 		SPEED = 2; //player movespeed
 
@@ -107,8 +112,8 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	
 		g2d.clearRect(0,0,getSize().width, getSize().height);
 		
-		
-		if(gameState=="test room"){
+		g2d.drawImage(bg.get(gameState).getImgIcon().getImage(), bg.get(gameState).getX(), bg.get(gameState).getY(), bg.get(gameState).getW(), bg.get(gameState).getH(), this);
+		if(gameState==0){
 			
 			
 
@@ -116,7 +121,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			g2d.setFont( new Font("SANS_SERIF", Font.BOLD, 20));
 			g2d.drawString(String.valueOf(key)+" testing font", 50, 110);
 		
-			drawPlayer(enemybullets,g2d,400,300);
+			drawPlayer(1,enemybullets,g2d);
 			drawPlayerBullets(g2d);
 			drawEnemies(testroomEnemies,g2d);
 			if(willShoot(100)){
@@ -128,7 +133,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		}
 		
 		
-		if (gameState=="menu"){
+		if (gameState==1){
 			
 			/*g2d.setColor(new Color(255, 27, 255));
 			g2d.drawRect(0, 0, 1000, 800);
@@ -136,14 +141,14 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			
 			g2d.setFont( new Font("SANS_SERIF", Font.BOLD, 40));
 			g2d.drawString("timewinder (alpha build)", 50, 110);*/
-			g2d.drawImage(titleScreen.getImage().getImage(), titleScreen.getX(), titleScreen.getY(), titleScreen.getW(), titleScreen.getH(), this);
+			
 		}
 		
-		if(gameState=="0.1"){
+		if(gameState==2){
 			g2d.setColor(new Color(171, 17, 17));
 			g2d.setFont( new Font("SANS_SERIF", Font.BOLD, 40));
 			g2d.drawString("Tip: Use WASD to move.",300,100);
-			drawPlayer(e04,g2d,350,700);
+			drawPlayer(1,e04,g2d);
 		}
 		
 		
@@ -165,50 +170,44 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
 
 
-	private void drawPlayer(ArrayList<EnemyProj> enemy, Graphics g2d, int x, int y){
-		boolean i = false;
+	private void drawPlayer(int room, ArrayList<EnemyProj> enemy, Graphics g2d){
 		
-		if(i=false){
-			leon.setX(x);
-			leon.setY(y);
-			i=true;
-		}
 		
 
 		g2d.setColor(Color.BLACK);
-		g2d.fillRect(leon.getX(), leon.getY(), leon.getW(), leon.getH());
+		g2d.fillRect(leon.get(room).getX(), leon.get(room).getY(), leon.get(room).getW(), leon.get(room).getH());
 		
 		
 		
 		if(left==true){
-			leon.move("x",-1*SPEED);
+			leon.get(room).move("x",-1*SPEED);
 		}
 		if(right==true){
-			leon.move("x",SPEED);
+			leon.get(room).move("x",SPEED);
 		}
 		if(up==true){
-			leon.move("y",-1*SPEED);
+			leon.get(room).move("y",-1*SPEED);
 		}
 		if(down==true){
-			leon.move("y",SPEED);
+			leon.get(room).move("y",SPEED);
 		}
 
-		if(leon.getX()<10) leon.setX(10);
-		if(leon.getX()+leon.getW()>1000) leon.setX(1000-leon.getW());
-		if(leon.getY()<10) leon.setY(10);
-		if(leon.getY()+leon.getH()>800) leon.setY(800-leon.getH());
+		if(leon.get(room).getX()<10) leon.get(room).setX(10);
+		if(leon.get(room).getX()+leon.get(room).getW()>1000) leon.get(room).setX(1000-leon.get(room).getW());
+		if(leon.get(room).getY()<10) leon.get(room).setY(10);
+		if(leon.get(room).getY()+leon.get(room).getH()>800) leon.get(room).setY(800-leon.get(room).getH());
 
 		if(enemy!=e04){
 			for(EnemyProj ebullet: enemy){
-				if(ebullet.collision(leon)){
-					leon.reduceHP(ebullet.getDMG());
+				if(ebullet.collision(leon.get(room))){
+					leon.get(room).reduceHP(ebullet.getDMG());
 					enemy.remove(ebullet);
 				}
 			}
 		}
 		
 
-		g2d.drawString(String.valueOf(leon.getHP()),20,600);
+		g2d.drawString(String.valueOf(leon.get(room).getHP()),20,600);
 			
 		
 	}
@@ -310,7 +309,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		if (e.getKeyCode() == KeyEvent.VK_W) up = false;
 		if (e.getKeyCode() == KeyEvent.VK_S) down = false;
 
-		if (e.getKeyCode() == KeyEvent.VK_ENTER) gameState = "menu";
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) gameState = 1;
 		
 	}
 
@@ -362,10 +361,18 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		py = e.getY();
 		System.out.println(px+", "+py);
 
-		playerBullets.add(new PlayerProj(leon.getCX(qqq), leon.getCY(qqq)));
+		if(gameState==1){
+			//if(set hitbox for first button){
+				
+			//}
+		}
 		
-		playerBullets.get(playerBullets.size()-1).setBulletTrajectory(leon,px,py);
-
+		for(int r=0;r<leon.size();++r){
+			playerBullets.add(new PlayerProj(leon.get(r).getCX(qqq), leon.get(r).getCY(qqq)));
+		
+		playerBullets.get(playerBullets.size()-1).setBulletTrajectory(leon.get(r),px,py);
+		}
+		
 
 		
 	}

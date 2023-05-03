@@ -3,14 +3,14 @@ import javax.swing.ImageIcon;
 public class Character {
     private int x,y,w,h,dx,dy,hp,cx,cy,maxhp;
 	
-    private ImageIcon sprite;
+    private String sprite;
 
     public Character() {
 		x=0;
 		y=0;
 		w=350; 
 		h=350;
-		sprite = new ImageIcon("");
+		sprite = "";
 		dx=0;
 		dy=0;
         hp=0;
@@ -26,7 +26,6 @@ public class Character {
         dx=1;
         dy=1;
         hp=36;
-        sprite = new ImageIcon(i);
 		
     }
 
@@ -39,7 +38,7 @@ public class Character {
 		hp=maxhp;
 	}
 
-	public Character(int xV, int yV, int wV, int hV, String i){ //player constructor
+	public Character(int xV, int yV, int wV, int hV, String i){ //image constructor
         x=xV;
         y=yV;
         w=wV;
@@ -47,7 +46,7 @@ public class Character {
         dx=1;
         dy=1;
         hp=36;
-        sprite = new ImageIcon(i);
+        sprite = i;
 		
     }
 
@@ -86,8 +85,8 @@ public class Character {
 	public int getMaxHP(){
 		return maxhp;
 	}
-	public ImageIcon getImage() {
-		return sprite;
+	public ImageIcon getImgIcon() {
+		return new ImageIcon(sprite);
 	}
 
     //to do: write setters
