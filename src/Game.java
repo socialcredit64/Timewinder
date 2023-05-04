@@ -53,8 +53,9 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		enemybullets = new ArrayList<EnemyProj>();
 
 		leon = new ArrayList<Player>();
-		leon.add(new Player(400,300)); //gamestate 0
-		leon.add(new Player(0,380)); //gamestate 2
+		leon.add(new Player(400,300)); 
+		leon.add(new Player(0,0)); //main menu
+		leon.add(new Player(0,380)); 
 
 		qqq = new PlayerProj(0,0);
 		ppp = new EnemyProj(0,0,0);
@@ -121,7 +122,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			g2d.setFont( new Font("SANS_SERIF", Font.BOLD, 20));
 			g2d.drawString(String.valueOf(key)+" testing font", 50, 110);
 		
-			drawPlayer(1,enemybullets,g2d);
+			drawPlayer(0,enemybullets,g2d);
 			drawPlayerBullets(g2d);
 			drawEnemies(testroomEnemies,g2d);
 			if(willShoot(100)){
@@ -135,12 +136,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		
 		if (gameState==1){
 			
-			/*g2d.setColor(new Color(255, 27, 255));
-			g2d.drawRect(0, 0, 1000, 800);
-			g2d.setColor(Color.BLACK);
 			
-			g2d.setFont( new Font("SANS_SERIF", Font.BOLD, 40));
-			g2d.drawString("timewinder (alpha build)", 50, 110);*/
 			
 		}
 		
