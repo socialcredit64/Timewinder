@@ -17,6 +17,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	private ArrayList <PlayerProj> playerBullets;
 	private ArrayList <EnemyProj> enemybullets;
 	private ArrayList <Enemy> testroomEnemies;
+	private ArrayList <Enemy> room3Enemies;
 	private PlayerProj qqq;
 	private EnemyProj ppp;
 	private ArrayList <EnemyProj> e04;
@@ -55,7 +56,8 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		leon = new ArrayList<Player>();
 		leon.add(new Player(400,300)); 
 		leon.add(new Player(0,0)); //main menu
-		leon.add(new Player(0,380)); 
+		leon.add(new Player(200,400)); 
+		leon.add(new Player(100,400)); //3
 
 		qqq = new PlayerProj(0,0);
 		ppp = new EnemyProj(0,0,0);
@@ -64,15 +66,20 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		bg.add(new Background(new ImageIcon("smile.png")));
 		bg.add(new Background(new ImageIcon("title screen.png")));
 		bg.add(new Background(new ImageIcon("2.png")));
+		bg.add(new Background(new ImageIcon("3.png")));
 		
 		
-		gameState=0; 
+		gameState=2; 
 
 		SPEED = 2; //player movespeed
 
 		testroomEnemies = new ArrayList<Enemy>();
 		testroomEnemies.add(new Enemy(600,300,10));
 		testroomEnemies.add(new Enemy(200,300,100));
+
+		room3Enemies = new ArrayList<Enemy>();
+		room3Enemies.add(new Enemy(650,400,80));
+
 
 		time = 0;
 	}
@@ -113,11 +120,16 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	
 		g2d.clearRect(0,0,getSize().width, getSize().height);
 		
+		
+		
+		
 		g2d.drawImage(bg.get(gameState).getImgIcon().getImage(), bg.get(gameState).getX(), bg.get(gameState).getY(), bg.get(gameState).getW(), bg.get(gameState).getH(), this);
+		
+		
+		
+		
 		if(gameState==0){
 			
-			
-
 			g2d.setColor(new Color(17, 17, 17));
 			g2d.setFont( new Font("SANS_SERIF", Font.BOLD, 20));
 			g2d.drawString(String.valueOf(key)+" testing font", 50, 110);
@@ -128,9 +140,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			if(willShoot(100)){
 				setEnemyBullet(testroomEnemies, enemybullets, 10, 0);
 			}
-			
 			drawEnemyBullets(enemybullets, g2d);
-			
 		}
 		
 		
@@ -142,9 +152,28 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		
 		if(gameState==2){
 			g2d.setColor(new Color(171, 17, 17));
-			g2d.setFont( new Font("SANS_SERIF", Font.BOLD, 40));
-			g2d.drawString("Tip: Use WASD to move.",300,100);
-			drawPlayer(1,e04,g2d);
+			g2d.setFont( new Font("SANS_SERIF", Font.PLAIN, 34));
+			g2d.drawString("Tip: Use WASD to move.",300,80);
+			drawPlayer(gameState,e04,g2d);
+			if(leon.get(gameState).getX()+leon.get(gameState).getW()>980&&(leon.get(gameState).getY()>300&&leon.get(gameState).getY()+leon.get(gameState).getH()<500)){
+				gameState=3;
+			}
+		}
+
+		if(gameState==3){
+			drawPlayer(gameState,enemybullets,g2d);
+			g2d.setColor(new Color(230, 17, 17));
+			g2d.setFont(new Font("SANS_SERIF", Font.PLAIN, 34));
+			g2d.drawString("Tip: Aim with your mouse, then MBLEFT to fire.",50,180);
+			drawPlayerBullets(g2d);
+			drawEnemies(room3Enemies,g2d);
+			if(willShoot(50)){ //
+				setEnemyBullet(room3Enemies, enemybullets, 10, gameState);
+			}
+			drawEnemyBullets(enemybullets, g2d);
+			if(room3Enemies.size()==0&&leon.get(gameState).getX()+leon.get(gameState).getW()>880&&leon.get(gameState).getY()>290&&leon.get(gameState).getH()<555){
+				gameState=4;
+			}
 		}
 		
 		
@@ -218,10 +247,10 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	}
 
 	private void drawEnemyBullets(ArrayList<EnemyProj> bullet, Graphics g2d){
-		
 		for (EnemyProj i: bullet){
 			i.moveBullets();
 			g2d.setColor(new Color(255, 46, 46));
+			//twoDgraph.setStroke(new BasicStroke(2));
 			g2d.drawOval(i.getX(),i.getY(),i.getW(),i.getH());
 			g2d.setColor(Color.white);
 			g2d.fillOval(i.getX(),i.getY(),i.getW(),i.getH());
@@ -239,8 +268,8 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		
 	}
 
-	private boolean willShoot(int multiplier){
-		if(time%multiplier==0){
+	private boolean willShoot(int frequency){
+		if(time%frequency==0){
 			return true;
 		}
 		else return false;
@@ -363,11 +392,10 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			//}
 		}
 		
-		for(int r=0;r<leon.size();++r){
-			playerBullets.add(new PlayerProj(leon.get(r).getCX(qqq), leon.get(r).getCY(qqq)));
 		
-		playerBullets.get(playerBullets.size()-1).setBulletTrajectory(leon.get(r),px,py);
-		}
+		playerBullets.add(new PlayerProj(leon.get(gameState).getCX(qqq), leon.get(gameState).getCY(qqq)));
+		
+		playerBullets.get(playerBullets.size()-1).setBulletTrajectory(leon.get(gameState),px,py);
 		
 
 		

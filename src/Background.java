@@ -35,3 +35,5 @@ public class Background {
 		return h;
 	}
 }
+
+//path gray color = 107,107,107
