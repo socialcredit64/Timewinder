@@ -3,15 +3,14 @@ import java.awt.Rectangle;
 import javax.swing.ImageIcon;
 
 public class Projectile {
-    private int x,y,w,h,dx,dy,vx,vy,dmg;
+    private int x,y,w,h,d,vx,vy,dmg;
 	private double ux,uy;
     public Projectile() {
 		x=0;
 		y=0;
 		w=40;
 		h=90;
-		dx=0;
-		dy=0;
+		d=0;
 	}
 
     public Projectile(int xV, int yV) { //player projectile
@@ -19,8 +18,7 @@ public class Projectile {
 		y=yV;
 		w=20;
 		h=20;
-		dx=0;
-		dy=0;
+		d=0;
 		dmg=7;
 		
 	}
@@ -29,8 +27,7 @@ public class Projectile {
 		y=yV;
 		w=20;
 		h=20;
-		dx=0;
-		dy=0;
+		d=5;
 		dmg=damage;
 	}
 
@@ -69,17 +66,9 @@ public class Projectile {
 	public void setUY(int n){
 		uy=n;
 	}
-    public void setBulletSpeed(String direction, int n){
-        if (direction == "x"){
-            dx=n;
-        }
-        if(direction == "y"){
-            dy=n;
-        }
-        
-    }
-
-
+    public void setD(int n){
+		d=n;
+	}
 
     public boolean collision(Character c) {
 		Rectangle character = new Rectangle(c.getX(), c.getY(), c.getW(), c.getH());
@@ -95,8 +84,8 @@ public class Projectile {
 		vy = MPosY-c.getCY(this);
 		
 			
-		ux = vx*5/(Math.sqrt(Math.pow(vx, 2)+Math.pow(vy, 2)));
-		uy = vy*5/(Math.sqrt(Math.pow(vx, 2)+Math.pow(vy, 2)));
+		ux = vx*d/(Math.sqrt(Math.pow(vx, 2)+Math.pow(vy, 2)));
+		uy = vy*d/(Math.sqrt(Math.pow(vx, 2)+Math.pow(vy, 2)));
 			
 			
 				

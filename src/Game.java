@@ -176,6 +176,10 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			}
 		}
 		
+		if(gameState==4){
+			
+		}
+		
 		
 
 		
@@ -250,7 +254,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		for (EnemyProj i: bullet){
 			i.moveBullets();
 			g2d.setColor(new Color(255, 46, 46));
-			//twoDgraph.setStroke(new BasicStroke(2));
+			((Graphics2D) g2d).setStroke(new BasicStroke(2));
 			g2d.drawOval(i.getX(),i.getY(),i.getW(),i.getH());
 			g2d.setColor(Color.white);
 			g2d.fillOval(i.getX(),i.getY(),i.getW(),i.getH());
@@ -259,11 +263,13 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
 	private void setEnemyBullet(ArrayList<Enemy> enemy, ArrayList<EnemyProj> bullets, int damage, int roomid){
 		Random rand = new Random(roomid);
+		int xdirection = new Random().nextBoolean() ? 1 : -1;
+		int ydirection = new Random().nextBoolean() ? 1 : -1;
 		
 		for(Enemy e: enemy){
 			bullets.add(new EnemyProj(e.getCX(ppp),e.getCY(ppp), damage)); //create a new bullet
-			bullets.get(bullets.size()-1).setUX(rand.nextInt(2));
-			bullets.get(bullets.size()-1).setUY(rand.nextInt(2));
+			bullets.get(bullets.size()-1).setUX(xdirection*rand.nextInt(2));
+			bullets.get(bullets.size()-1).setUY(ydirection*rand.nextInt(2));
 		}
 		
 	}
