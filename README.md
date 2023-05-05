@@ -2,5 +2,5 @@
 
 Timewinder is the best linear roguelike game of its kind.
 
-## 5/4 2023 v0.0.1:
+## v0.0.1 (4/5/2023):
 Two rooms have been added.
