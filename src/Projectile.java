@@ -69,6 +69,9 @@ public class Projectile {
     public void setD(int n){
 		d=n;
 	}
+	public double getUX(){
+		return ux;
+	}
 
     public boolean collision(Character c) {
 		Rectangle character = new Rectangle(c.getX(), c.getY(), c.getW(), c.getH());
@@ -84,8 +87,8 @@ public class Projectile {
 		vy = MPosY-c.getCY(this);
 		
 			
-		ux = vx*d/(Math.sqrt(Math.pow(vx, 2)+Math.pow(vy, 2)));
-		uy = vy*d/(Math.sqrt(Math.pow(vx, 2)+Math.pow(vy, 2)));
+		ux = vx*3/(Math.sqrt(Math.pow(vx, 2)+Math.pow(vy, 2)));
+		uy = vy*3/(Math.sqrt(Math.pow(vx, 2)+Math.pow(vy, 2)));
 			
 			
 				
