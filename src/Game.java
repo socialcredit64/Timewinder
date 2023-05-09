@@ -181,7 +181,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		}
 		
 		
-
+		
 		
 		++time;
 		twoDgraph.drawImage(back, null, 0, 0);
@@ -229,7 +229,9 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		if(enemy!=e04){
 			for(EnemyProj ebullet: enemy){
 				if(ebullet.collision(leon.get(room))){
-					leon.get(room).reduceHP(ebullet.getDMG());
+					for(Player i: leon){
+						i.reduceHP(ebullet.getDMG());
+					}
 					enemy.remove(ebullet);
 				}
 			}
@@ -237,13 +239,24 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		
 
 		g2d.drawString(String.valueOf(leon.get(room).getHP()),20,600);
+
+		if(leon.get(room).getHP()<0){
+			gameState=0;
+			for(Player i: leon){
+				i.setHP(i.getMaxHP());
+			}
+		}
 			
 		
 	}
 	
 	private void drawPlayerBullets(Graphics g2d){
+		
+		
 		g2d.setColor(Color.BLACK);
 		for(PlayerProj i : playerBullets){
+
+
 			i.moveBullets();
 			g2d.fillOval(i.getX(),i.getY(),i.getW(),i.getH());
 		}
@@ -391,7 +404,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		px = e.getX();
 		py = e.getY();
 		System.out.println(px+", "+py);
-
+		
 		if(gameState==1){
 			//if(set hitbox for first button){
 				
@@ -404,7 +417,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		playerBullets.get(playerBullets.size()-1).setBulletTrajectory(leon.get(gameState),px,py);
 		
 
-		
+		System.out.println(playerBullets.get(playerBullets.size()-1).getUX());
 	}
 
 

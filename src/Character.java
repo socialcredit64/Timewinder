@@ -88,6 +88,9 @@ public class Character {
 	public ImageIcon getImgIcon() {
 		return new ImageIcon(sprite);
 	}
+	public void setHP(int n){
+		hp=n;
+	}
 
     //to do: write setters
     public void setX(int n) {
