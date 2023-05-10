@@ -18,6 +18,8 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	private ArrayList <EnemyProj> enemybullets;
 	private ArrayList <Enemy> testroomEnemies;
 	private ArrayList <Enemy> room3Enemies;
+	private ArrayList <Enemy> r4e;
+
 	private PlayerProj qqq;
 	private EnemyProj ppp;
 	private ArrayList <EnemyProj> e04;
@@ -58,6 +60,9 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		leon.add(new Player(0,0)); //main menu
 		leon.add(new Player(200,400)); 
 		leon.add(new Player(100,400)); //3
+		leon.add(new Player(100,350)); //4 in the castle
+		leon.add(new Player(100,350)); //5 going up
+		leon.add(new Player(460,900)); //6 before boss room
 
 		qqq = new PlayerProj(0,0);
 		ppp = new EnemyProj(0,0,0);
@@ -67,6 +72,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		bg.add(new Background(new ImageIcon("title screen.png")));
 		bg.add(new Background(new ImageIcon("2.png")));
 		bg.add(new Background(new ImageIcon("3.png")));
+		bg.add(new Background(new ImageIcon("4.png")));
 		
 		
 		gameState=2; 
@@ -80,6 +86,16 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		room3Enemies = new ArrayList<Enemy>();
 		room3Enemies.add(new Enemy(650,400,80));
 
+
+		r4e=new ArrayList<Enemy>();
+		for(int i=0;i<5;++i){
+		r4e.add(new Enemy(200+100*i,150,30));
+		r4e.add(new Enemy(300+100*i,350,30));
+		r4e.add(new Enemy(500+100*i,550,30));
+		r4e.add(new Enemy(-100+100*i,550,30));
+	
+		}
+		
 
 		time = 0;
 	}
@@ -158,6 +174,9 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			if(leon.get(gameState).getX()+leon.get(gameState).getW()>980&&(leon.get(gameState).getY()>300&&leon.get(gameState).getY()+leon.get(gameState).getH()<500)){
 				gameState=3;
 			}
+			
+			
+				
 		}
 
 		if(gameState==3){
@@ -173,16 +192,42 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			drawEnemyBullets(enemybullets, g2d);
 			if(room3Enemies.size()==0&&leon.get(gameState).getX()+leon.get(gameState).getW()>880&&leon.get(gameState).getY()>290&&leon.get(gameState).getH()<555){
 				gameState=4;
+				time=0;
 			}
 		}
 		
 		if(gameState==4){
+			drawPlayer(gameState,enemybullets,g2d);
 			
+
+			drawPlayerBullets(g2d);
+			drawEnemies(r4e,g2d);
+			if(willShoot(75)){ //
+				setEnemyBullet(r4e, enemybullets, 10, gameState);
+			}
+			drawEnemyBullets(enemybullets, g2d);
+				
+
+			if(r4e.size()==0&&leon.get(gameState).getX()+leon.get(gameState).getW()>880&&leon.get(gameState).getY()>290&&leon.get(gameState).getH()<555){
+				gameState=5;
+				time=0;
+			}
+
+			if(time<250){
+				g2d.setColor(new Color(230, 17, 17));
+				g2d.setFont(new Font("SANS_SERIF", Font.BOLD, 54));
+				g2d.drawString("Lvl 1: Dark Castle",250,380);
+			}
 		}
 		
 		
 		
-		
+		if(leon.get(gameState).getHP()<=0){
+			gameState=2;
+			for(Player i: leon){
+				i.setHP(36);
+			}
+		}
 		++time;
 		twoDgraph.drawImage(back, null, 0, 0);
 
@@ -240,16 +285,11 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
 		g2d.drawString(String.valueOf(leon.get(room).getHP()),20,600);
 
-		if(leon.get(room).getHP()<0){
-			gameState=0;
-			for(Player i: leon){
-				i.setHP(i.getMaxHP());
-			}
-		}
-			
+		
 		
 	}
 	
+
 	private void drawPlayerBullets(Graphics g2d){
 		
 		
@@ -263,6 +303,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		
 	}
 
+
 	private void drawEnemyBullets(ArrayList<EnemyProj> bullet, Graphics g2d){
 		for (EnemyProj i: bullet){
 			i.moveBullets();
@@ -271,8 +312,11 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			g2d.drawOval(i.getX(),i.getY(),i.getW(),i.getH());
 			g2d.setColor(Color.white);
 			g2d.fillOval(i.getX(),i.getY(),i.getW(),i.getH());
+
+			
 		}
 	}
+
 
 	private void setEnemyBullet(ArrayList<Enemy> enemy, ArrayList<EnemyProj> bullets, int damage, int roomid){
 		Random rand = new Random(roomid);
@@ -287,12 +331,14 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		
 	}
 
+
 	private boolean willShoot(int frequency){
 		if(time%frequency==0){
 			return true;
 		}
 		else return false;
 	}
+
 
 	private void drawEnemies(ArrayList<Enemy> enemy, Graphics g2d) {
 		for(Enemy e: enemy){
