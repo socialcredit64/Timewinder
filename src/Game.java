@@ -19,6 +19,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	private ArrayList <Enemy> testroomEnemies;
 	private ArrayList <Enemy> room3Enemies;
 	private ArrayList <Enemy> r4e;
+	private ArrayList <Enemy> r5e;
 
 	private PlayerProj qqq;
 	private EnemyProj ppp;
@@ -61,7 +62,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		leon.add(new Player(200,400)); 
 		leon.add(new Player(100,400)); //3
 		leon.add(new Player(100,350)); //4 in the castle
-		leon.add(new Player(100,350)); //5 going up
+		leon.add(new Player(50,350)); //5 going up
 		leon.add(new Player(460,900)); //6 before boss room
 
 		qqq = new PlayerProj(0,0);
@@ -73,6 +74,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		bg.add(new Background(new ImageIcon("2.png")));
 		bg.add(new Background(new ImageIcon("3.png")));
 		bg.add(new Background(new ImageIcon("4.png")));
+		bg.add(new Background(new ImageIcon("5.png")));
 		
 		
 		gameState=2; 
@@ -88,13 +90,17 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
 
 		r4e=new ArrayList<Enemy>();
-		for(int i=0;i<5;++i){
-		r4e.add(new Enemy(200+100*i,150,30));
-		r4e.add(new Enemy(300+100*i,350,30));
-		r4e.add(new Enemy(500+100*i,550,30));
-		r4e.add(new Enemy(-100+100*i,550,30));
+		for(int i=0;i<4;++i){
+		r4e.add(new Enemy(200+100*i,150,20));
+		r4e.add(new Enemy(300+100*i,350,20));
+		r4e.add(new Enemy(500+100*i,550,20));
+		r4e.add(new Enemy(100*i,550,20));
 	
 		}
+
+		r5e=new ArrayList<Enemy>();
+		r5e.add(new Enemy(500,500,20));
+		r5e.add(new Enemy(700,300,20));
 		
 
 		time = 0;
@@ -219,14 +225,32 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 				g2d.drawString("Lvl 1: Dark Castle",250,380);
 			}
 		}
+
+		if(gameState==5){
+			for(int i=r4e.size()-1;i>=0;++i){ //destroy bullets
+				r4e.remove(i);
+			}
+
+			drawPlayer(gameState,enemybullets,g2d);
+			
+
+			drawPlayerBullets(g2d);
+			drawEnemies(r5e,g2d);
+			if(willShoot(75)){ //
+				setEnemyBullet(r5e, enemybullets, 10, gameState);
+			}
+			drawEnemyBullets(enemybullets, g2d);
+			//make moving enemies
+			if(r4e.size()==0&&leon.get(gameState).getY()<30&&leon.get(gameState).getX()>390&&leon.get(gameState).getX()<630){
+				gameState=6;
+				time=0;
+			}
+		}
 		
 		
 		
 		if(leon.get(gameState).getHP()<=0){
-			gameState=2;
-			for(Player i: leon){
-				i.setHP(36);
-			}
+			//System.exit(0);
 		}
 		++time;
 		twoDgraph.drawImage(back, null, 0, 0);
