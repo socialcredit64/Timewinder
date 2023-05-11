@@ -219,6 +219,10 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 				g2d.drawString("Lvl 1: Dark Castle",250,380);
 			}
 		}
+
+		if (gameState==5){
+			
+		}
 		
 		
 		
