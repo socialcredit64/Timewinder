@@ -30,6 +30,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	private PlayerProj qqq;
 	private EnemyProj ppp;
 	private ArrayList <EnemyProj> e04;
+	private EnemyProj c8;
 
 	
 	private boolean left;
@@ -42,6 +43,8 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
 	private int px;
 	private int py;
+	private int vx;
+	private int vy;
 
 	private ArrayList <Background> bg;
 
@@ -75,6 +78,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
 		qqq = new PlayerProj(0,0);
 		ppp = new EnemyProj(0,0,0);
+		c8 = new EnemyProj(0,0,0);
 
 		bg = new ArrayList<Background>();
 		bg.add(new Background(new ImageIcon("smile.png")));
@@ -88,7 +92,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
 		
 		
-		gameState=5; 
+		gameState=1; 
 
 		SPEED = 2; //player movespeed
 
@@ -184,9 +188,12 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		
 		
 		if (gameState==1){
-			
-			
-			
+			g2d.setColor(new Color(0, 0, 0));
+			g2d.setFont( new Font("SANS_SERIF", Font.PLAIN, 64));
+			g2d.drawString("New Game",80,300);
+			g2d.drawString("Credits",140,630);
+			g2d.setFont( new Font("SANS_SERIF", Font.PLAIN, 60));
+			g2d.drawString("Training Mode",50,466);
 		}
 		
 		if(gameState==2){
@@ -326,17 +333,35 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			}
 
 		}
+		//boss fight
+		
 
 		if(gameState==7){
 			//draw the Boss
 			g2d.setColor(new Color(245, 49, 209));
 			g2d.fillRect(boss.getX(), boss.getY(), 120, 120);
-
+			
 			//player
 			drawPlayer(gameState,enemybullets,g2d);
 			drawPlayerBullets(g2d);
+			
+			//bullet tracking logic
+			vx=leon.get(gameState).getCX(c8);
+			vy=leon.get(gameState).getCY(c8);
 
+			//attack patterns
+			
+			bossbullets.add(new EnemyProj(leon.get(gameState).getCX(c8),leon.get(gameState).getCY(c8),10));
+			bossbullets.get(bossbullets.size()-1).setBulletTrajectory(leon.get(gameState),vx,vy);
+			for(Enemyproj i: bossbullets){	
+				i.moveBullets();
+				g2d.setColor(new Color(255, 46, 46));
+				((Graphics2D) g2d).setStroke(new BasicStroke(2));
+				g2d.drawOval(i.getX(),i.getY(),i.getW(),i.getH());
+				g2d.setColor(Color.white);
+				g2d.fillOval(i.getX(),i.getY(),i.getW(),i.getH());
 
+			}
 		}
 		
 		
@@ -571,9 +596,9 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		System.out.println(px+", "+py);
 		
 		if(gameState==1){
-			//if(set hitbox for first button){
-				
-			//}
+			if(px>48&&px<458&&py>230&&py<357){
+				gameState=2;
+			}
 		}
 		
 		
