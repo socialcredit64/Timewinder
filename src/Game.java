@@ -353,7 +353,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			
 			bossbullets.add(new EnemyProj(leon.get(gameState).getCX(c8),leon.get(gameState).getCY(c8),10));
 			bossbullets.get(bossbullets.size()-1).setBulletTrajectory(leon.get(gameState),vx,vy);
-			for(Enemyproj i: bossbullets){	
+			for(EnemyProj i: bossbullets){	
 				i.moveBullets();
 				g2d.setColor(new Color(255, 46, 46));
 				((Graphics2D) g2d).setStroke(new BasicStroke(2));
