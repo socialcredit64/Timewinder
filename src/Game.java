@@ -1,4 +1,4 @@
-
+//無敵和重生調回來
 import javax.swing.*;
 
 import java.awt.*;
@@ -14,12 +14,18 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	private BufferedImage back; 
 	private int key; 
 	private int gameState;
+	
 	private ArrayList <PlayerProj> playerBullets;
+	
 	private ArrayList <EnemyProj> enemybullets;
+	private ArrayList <EnemyProj> bossbullets;
+	
 	private ArrayList <Enemy> testroomEnemies;
 	private ArrayList <Enemy> room3Enemies;
 	private ArrayList <Enemy> r4e;
 	private ArrayList <Enemy> r5e;
+	private ArrayList <Enemy> r6e;
+	private Enemy boss;
 
 	private PlayerProj qqq;
 	private EnemyProj ppp;
@@ -55,6 +61,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		
 		playerBullets = new ArrayList<PlayerProj>();
 		enemybullets = new ArrayList<EnemyProj>();
+		bossbullets = new ArrayList<EnemyProj>();
 
 		leon = new ArrayList<Player>();
 		leon.add(new Player(400,300)); 
@@ -64,6 +71,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		leon.add(new Player(100,350)); //4 in the castle
 		leon.add(new Player(50,350)); //5 going up
 		leon.add(new Player(460,900)); //6 before boss room
+		leon.add(new Player(460,900)); //7 boss room
 
 		qqq = new PlayerProj(0,0);
 		ppp = new EnemyProj(0,0,0);
@@ -75,18 +83,22 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		bg.add(new Background(new ImageIcon("3.png")));
 		bg.add(new Background(new ImageIcon("4.png")));
 		bg.add(new Background(new ImageIcon("5.png")));
+		bg.add(new Background(new ImageIcon("6.png")));
+		bg.add(new Background(new ImageIcon("7.png")));
+
 		
 		
-		gameState=2; 
+		gameState=5; 
 
 		SPEED = 2; //player movespeed
 
 		testroomEnemies = new ArrayList<Enemy>();
 		testroomEnemies.add(new Enemy(600,300,10));
 		testroomEnemies.add(new Enemy(200,300,100));
+		
 
 		room3Enemies = new ArrayList<Enemy>();
-		room3Enemies.add(new Enemy(650,400,80));
+		room3Enemies.add(new Enemy(650,400,75));
 
 
 		r4e=new ArrayList<Enemy>();
@@ -99,9 +111,14 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		}
 
 		r5e=new ArrayList<Enemy>();
-		r5e.add(new Enemy(500,500,20));
-		r5e.add(new Enemy(700,300,20));
+		r5e.add(new Enemy(500,500,30));
+		r5e.add(new Enemy(700,300,30));
+		r5e.add(new Enemy(200,150,30));
 		
+		r6e=new ArrayList<Enemy>();
+		r6e.add(new Enemy(470,315,1));
+
+		boss = new Enemy(460, 120, 350);
 
 		time = 0;
 	}
@@ -158,7 +175,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		
 			drawPlayer(0,enemybullets,g2d);
 			drawPlayerBullets(g2d);
-			drawEnemies(testroomEnemies,g2d);
+			drawEnemies(55,55,255,testroomEnemies,g2d);
 			if(willShoot(100)){
 				setEnemyBullet(testroomEnemies, enemybullets, 10, 0);
 			}
@@ -191,7 +208,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			g2d.setFont(new Font("SANS_SERIF", Font.PLAIN, 34));
 			g2d.drawString("Tip: Aim with your mouse, then MBLEFT to fire.",50,180);
 			drawPlayerBullets(g2d);
-			drawEnemies(room3Enemies,g2d);
+			drawEnemies(55,55,255,room3Enemies,g2d);
 			if(willShoot(50)){ //
 				setEnemyBullet(room3Enemies, enemybullets, 10, gameState);
 			}
@@ -207,7 +224,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			
 
 			drawPlayerBullets(g2d);
-			drawEnemies(r4e,g2d);
+			drawEnemies(55,55,255,r4e,g2d);
 			if(willShoot(75)){ //
 				setEnemyBullet(r4e, enemybullets, 10, gameState);
 			}
@@ -235,16 +252,91 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			
 
 			drawPlayerBullets(g2d);
-			drawEnemies(r5e,g2d);
-			if(willShoot(75)){ //
+			drawEnemies(55,55,255,r5e,g2d);
+			if(willShoot(50)){ //
 				setEnemyBullet(r5e, enemybullets, 10, gameState);
 			}
 			drawEnemyBullets(enemybullets, g2d);
 			//make moving enemies
-			if(r4e.size()==0&&leon.get(gameState).getY()<30&&leon.get(gameState).getX()>390&&leon.get(gameState).getX()<630){
+			
+			if(r5e.size()==3){
+				if((time/150)%2==0){
+					r5e.get(0).move("y",-1);
+					r5e.get(1).move("y",2);
+					r5e.get(2).move("x",1);
+				}
+				else{
+					r5e.get(0).move("y",1);
+					r5e.get(1).move("y",-2);
+					r5e.get(2).move("x",-1);
+				}
+			}
+			else if(r5e.size()==2){
+				if((time/150)%2==0){
+					r5e.get(0).move("y",-1);
+					r5e.get(1).move("x",1);
+				}
+				else{
+					r5e.get(0).move("y",1);
+					r5e.get(1).move("x",-1);
+				}
+			}
+			else if (r5e.size()==1){
+				if((time/100)%2==0){
+					r5e.get(0).move("x",-1);
+					r5e.get(0).move("y",1);
+					
+				}
+				else{
+					
+					r5e.get(0).move("x",1);
+					r5e.get(0).move("y",-1);
+				}
+			}
+			
+
+			
+
+			if(r5e.size()==0&&leon.get(gameState).getY()<30&&leon.get(gameState).getX()>390&&leon.get(gameState).getX()<630){
 				gameState=6;
 				time=0;
 			}
+		}
+
+		if(gameState==6){
+			drawPlayer(gameState,enemybullets,g2d);
+			drawEnemies(255, 55, 55, r6e, g2d);
+			drawPlayerBullets(g2d);
+
+			if(r6e.size()==0){
+				leon.get(gameState).setHP(36);
+				leon.get(gameState+1).setHP(36);
+				g2d.setColor(new Color(230, 17, 17));
+				g2d.setFont(new Font("SANS_SERIF", Font.BOLD, 54));
+				g2d.drawString("Health Restored.",260,380);
+
+				if(leon.get(gameState).getY()<30&&leon.get(gameState).getX()>390&&leon.get(gameState).getX()<630){
+					gameState=7;
+					time=0;
+					for(int i=0; i<enemybullets.size();++i){
+						enemybullets.remove(i);
+					}
+					
+				}
+			}
+
+		}
+
+		if(gameState==7){
+			//draw the Boss
+			g2d.setColor(new Color(245, 49, 209));
+			g2d.fillRect(boss.getX(), boss.getY(), 120, 120);
+
+			//player
+			drawPlayer(gameState,enemybullets,g2d);
+			drawPlayerBullets(g2d);
+
+
 		}
 		
 		
@@ -344,12 +436,15 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
 	private void setEnemyBullet(ArrayList<Enemy> enemy, ArrayList<EnemyProj> bullets, int damage, int roomid){
 		Random rand = new Random(roomid);
+		//positive and negative
 		int xdirection = new Random().nextBoolean() ? 1 : -1;
+		
 		int ydirection = new Random().nextBoolean() ? 1 : -1;
 		
 		for(Enemy e: enemy){
 			bullets.add(new EnemyProj(e.getCX(ppp),e.getCY(ppp), damage)); //create a new bullet
 			bullets.get(bullets.size()-1).setUX(xdirection*rand.nextInt(2));
+			System.out.println(xdirection);
 			bullets.get(bullets.size()-1).setUY(ydirection*rand.nextInt(2));
 		}
 		
@@ -363,10 +458,10 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		else return false;
 	}
 
-
-	private void drawEnemies(ArrayList<Enemy> enemy, Graphics g2d) {
+	//55, 55, 255
+	private void drawEnemies(int r, int g, int b, ArrayList<Enemy> enemy, Graphics g2d) {
 		for(Enemy e: enemy){
-			g2d.setColor(new Color(55, 55, 255));
+			g2d.setColor(new Color(r, g, b));
 			g2d.fillRect(e.getX(), e.getY(), e.getW(), e.getH());
 			
 			if(e.getHP()<e.getMaxHP()){
