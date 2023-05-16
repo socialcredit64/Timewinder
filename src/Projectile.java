@@ -60,6 +60,12 @@ public class Projectile {
     public void setY(int n){
         y=n;
     }
+	public void setW(int n){
+        w=n;
+    }
+	public void setH(int n){
+        h=n;
+    }
 	public void setUX(int n){
 		ux=n;
 	}
@@ -82,7 +88,7 @@ public class Projectile {
 				return false;
 	}
 
-	public void setBulletTrajectory(Character c, int MPosX, int MPosY){
+	public void setBulletTrajectory(Character c, int MPosX, int MPosY){//destination
         vx = MPosX-c.getCX(this);
 		vy = MPosY-c.getCY(this);
 		

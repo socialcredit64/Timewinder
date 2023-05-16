@@ -99,6 +99,12 @@ public class Character {
 	public void setY(int n) {
 		y=n;
 	}
+	public void setW(int n){
+        w=n;
+    }
+	public void setH(int n){
+        h=n;
+    }
 	public void reduceHP(int n){
 		hp-=n;
 	}

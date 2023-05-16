@@ -46,6 +46,8 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	private int vx;
 	private int vy;
 
+	private int desperate;
+
 	private ArrayList <Background> bg;
 
 	private int time;
@@ -56,7 +58,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 		key =-1; 
-		
+		desperate=0;
 		boolean left = false;
     	boolean up = false;
     	boolean down = false;
@@ -74,7 +76,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		leon.add(new Player(100,350)); //4 in the castle
 		leon.add(new Player(50,350)); //5 going up
 		leon.add(new Player(460,900)); //6 before boss room
-		leon.add(new Player(460,900)); //7 boss room
+		leon.add(new Player(500,900)); //7 boss room
 
 		qqq = new PlayerProj(0,0);
 		ppp = new EnemyProj(0,0,0);
@@ -92,7 +94,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
 		
 		
-		gameState=1; 
+		gameState=7; 
 
 		SPEED = 2; //player movespeed
 
@@ -122,7 +124,10 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		r6e=new ArrayList<Enemy>();
 		r6e.add(new Enemy(470,315,1));
 
-		boss = new Enemy(460, 120, 350);
+		boss = new Enemy(460, 120, 400);
+		boss.setW(120);
+		boss.setH(120);
+
 
 		time = 0;
 	}
@@ -338,30 +343,110 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
 		if(gameState==7){
 			//draw the Boss
-			g2d.setColor(new Color(245, 49, 209));
+			if(desperate==0){
+				g2d.setColor(new Color(245, 49, 209));
+			}
+			else{
+				g2d.setColor(new Color(244/2, 48/2, 210/2));
+			}
 			g2d.fillRect(boss.getX(), boss.getY(), 120, 120);
+			
+			g2d.setColor(new Color(245, 49, 49));
+			g2d.setFont(new Font("SANS_SERIF", Font.BOLD, 40));
+			g2d.drawString("Boss Health", 100, 590);
+			g2d.drawRect(100, 600, 400, 25);
+			g2d.fillRect(100, 600, boss.getHP(), 25);
+
 			
 			//player
 			drawPlayer(gameState,enemybullets,g2d);
 			drawPlayerBullets(g2d);
+
+			//collision
+			for(PlayerProj i: playerBullets){
+				if(i.collision(boss)){
+					playerBullets.remove(i);
+					boss.reduceHP(10);
+				}
+			}
+			for(EnemyProj i: bossbullets){
+				if(i.collision(leon.get(gameState))){
+					bossbullets.remove(i);
+					leon.get(gameState).reduceHP(i.getDMG());
+				}
+			}
+
+			if(boss.getHP()<=0){
+				gameState=8; //win screen
+			}
+			
+			//out of bound bullets
+			for(PlayerProj i: playerBullets){
+				if(i.getY()<60||i.getX()<60||i.getX()>940){
+					playerBullets.remove(i);
+				}
+			}
 			
 			//bullet tracking logic
 			vx=leon.get(gameState).getCX(c8);
 			vy=leon.get(gameState).getCY(c8);
 
-			//attack patterns
+			//attack pattern: follow
 			
-			bossbullets.add(new EnemyProj(leon.get(gameState).getCX(c8),leon.get(gameState).getCY(c8),10));
-			bossbullets.get(bossbullets.size()-1).setBulletTrajectory(leon.get(gameState),vx,vy);
-			for(EnemyProj i: bossbullets){	
+			
+			
+			if(willShoot(20)){
+				bossbullets.add(new EnemyProj(boss.getCX(c8),boss.getCY(c8),10));
+				bossbullets.get(bossbullets.size()-1).setBulletTrajectory(boss,vx,vy);
+			}
+			
+			
+			for(EnemyProj i: bossbullets){
+				i.setW(30);
+				i.setH(i.getW());
 				i.moveBullets();
+				System.out.println(i.getUX());
 				g2d.setColor(new Color(255, 46, 46));
-				((Graphics2D) g2d).setStroke(new BasicStroke(2));
+				((Graphics2D) g2d).setStroke(new BasicStroke(3));
 				g2d.drawOval(i.getX(),i.getY(),i.getW(),i.getH());
 				g2d.setColor(Color.white);
 				g2d.fillOval(i.getX(),i.getY(),i.getW(),i.getH());
 
 			}
+			
+			//attack pattern: desperate
+			if(desperate==0&&boss.getHP()<100){
+				boss.setHP(300);
+				++desperate;
+			}
+			if(desperate>0){
+				if(willShoot(10)){
+					Random rand = new Random(gameState);
+					//positive and negative
+					int xdirection = new Random().nextBoolean() ? 1 : -1;
+					int ydirection = new Random().nextBoolean() ? 1 : -1;
+					bossbullets.add(new EnemyProj(boss.getCX(ppp),boss.getCY(ppp), 10)); //create a new bullet
+					bossbullets.get(bossbullets.size()-1).setUX(xdirection*rand.nextInt(3));
+					bossbullets.get(bossbullets.size()-1).setUY(ydirection*rand.nextInt(3));
+				}
+			}
+
+
+			//boss movement
+			if(desperate==0){
+				if(willShoot(50)){
+					boss.move("x", (int) ((leon.get(gameState).getCX(ppp)-boss.getCX(ppp))*60/(Math.sqrt(Math.pow(leon.get(gameState).getCX(ppp)-boss.getCX(ppp), 2)+Math.pow(leon.get(gameState).getCY(ppp)-boss.getCY(ppp), 2)))));
+					boss.move("y", (int) ((leon.get(gameState).getCY(ppp)-boss.getCY(ppp))*60/(Math.sqrt(Math.pow(leon.get(gameState).getCX(ppp)-boss.getCX(ppp), 2)+Math.pow(leon.get(gameState).getCY(ppp)-boss.getCY(ppp), 2)))));
+				}
+			}
+			else {
+				if(willShoot(25)){
+					boss.move("x", (int) ((leon.get(gameState).getCX(ppp)-boss.getCX(ppp))*50/(Math.sqrt(Math.pow(leon.get(gameState).getCX(ppp)-boss.getCX(ppp), 2)+Math.pow(leon.get(gameState).getCY(ppp)-boss.getCY(ppp), 2)))));
+					boss.move("y", (int) ((leon.get(gameState).getCY(ppp)-boss.getCY(ppp))*50/(Math.sqrt(Math.pow(leon.get(gameState).getCX(ppp)-boss.getCX(ppp), 2)+Math.pow(leon.get(gameState).getCY(ppp)-boss.getCY(ppp), 2)))));
+
+				}
+			}
+			
 		}
 		
 		
