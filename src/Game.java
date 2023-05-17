@@ -51,6 +51,8 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	private ArrayList <Background> bg;
 
 	private int time;
+
+	private Music sound;
 	
 	public Game() {
 		new Thread(this).start();	
@@ -130,6 +132,8 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
 
 		time = 0;
+
+		sound = new Music();
 	}
 
 	//
@@ -321,6 +325,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			drawPlayerBullets(g2d);
 
 			if(r6e.size()==0){
+				sound.playmusic("healing.wav");
 				leon.get(gameState).setHP(36);
 				leon.get(gameState+1).setHP(36);
 				g2d.setColor(new Color(230, 17, 17));
@@ -373,6 +378,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 				if(i.collision(leon.get(gameState))){
 					bossbullets.remove(i);
 					leon.get(gameState).reduceHP(i.getDMG());
+					sound.playmusic("takedamage.wav");
 				}
 			}
 
@@ -502,6 +508,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 				if(ebullet.collision(leon.get(room))){
 					for(Player i: leon){
 						i.reduceHP(ebullet.getDMG());
+						sound.playmusic("takedamage.wav");
 					}
 					enemy.remove(ebullet);
 				}
@@ -686,7 +693,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			}
 		}
 		
-		
+		sound.playmusic("shoot.wav");
 		playerBullets.add(new PlayerProj(leon.get(gameState).getCX(qqq), leon.get(gameState).getCY(qqq)));
 		
 		playerBullets.get(playerBullets.size()-1).setBulletTrajectory(leon.get(gameState),px,py);
