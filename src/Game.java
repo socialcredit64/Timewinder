@@ -96,7 +96,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
 		
 		
-		gameState=7; 
+		gameState=1; 
 
 		SPEED = 2; //player movespeed
 
@@ -346,7 +346,8 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		//boss fight
 		
 
-		if(gameState==7){
+		if(gameState==7&&boss.getHP()>0){
+
 			//draw the Boss
 			if(desperate==0){
 				g2d.setColor(new Color(245, 49, 209));
@@ -381,10 +382,8 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 					sound.playmusic("takedamage.wav");
 				}
 			}
-
-			if(boss.getHP()<=0){
-				gameState=8; //win screen
-			}
+			//win screen
+			
 			
 			//out of bound bullets
 			for(PlayerProj i: playerBullets){
@@ -421,7 +420,8 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			}
 			
 			//attack pattern: desperate
-			if(desperate==0&&boss.getHP()<100){
+			if(desperate==0&&boss.getHP()<20){
+				sound.playmusic("pwrup.wav");
 				boss.setHP(300);
 				++desperate;
 			}
@@ -453,6 +453,24 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 				}
 			}
 			
+			//win screen
+			
+		}
+		if(gameState==7&&boss.getHP()<=0){
+			//sound.playmusic("lvlup.wav");
+			g2d.setColor(new Color(30, 30, 30));
+			g2d.setFont(new Font("Serif", Font.BOLD, 54));
+			g2d.drawString("Lvl 1: Cleared.",270,380);
+			g2d.setFont(new Font("Serif", Font.BOLD, 30));
+			g2d.drawString("Thanks for playing!",270,420);
+		}
+		if(gameState==8){//options
+
+		}
+		if(gameState==9){//credits
+			g2d.setColor(new Color(30, 30, 30));
+			g2d.setFont(new Font("Serif", Font.BOLD, 54));
+			g2d.drawString("Game By: Leon Chen",270,420);
 		}
 		
 		
@@ -688,8 +706,14 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		System.out.println(px+", "+py);
 		
 		if(gameState==1){
-			if(px>48&&px<458&&py>230&&py<357){
+			if(px>48&&px<458&&py>230&&py<360){
 				gameState=2;
+			}
+			if(px>48&&px<458&&py>400&&py<430){
+				gameState=8;
+			}
+			if(px>48&&px<458&&py>470&&py<500){
+				gameState=9;
 			}
 		}
 		
