@@ -219,10 +219,13 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		}
 
 		if(gameState==3){
+			drawHPBar(g2d);
 			drawPlayer(gameState,enemybullets,g2d);
 			g2d.setColor(new Color(230, 17, 17));
 			g2d.setFont(new Font("SANS_SERIF", Font.PLAIN, 34));
 			g2d.drawString("Tip: Aim with your mouse, then MBLEFT to fire.",50,180);
+			g2d.setFont( new Font("SANS_SERIF", Font.PLAIN, 20));
+			g2d.drawString("<< This is your health. If it depletes, start over.",150,70);
 			drawPlayerBullets(g2d);
 			drawEnemies(55,55,255,room3Enemies,g2d);
 			if(willShoot(50)){ //
@@ -236,6 +239,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		}
 		
 		if(gameState==4){
+			drawHPBar(g2d);
 			drawPlayer(gameState,enemybullets,g2d);
 			
 
@@ -260,6 +264,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		}
 
 		if(gameState==5){
+			drawHPBar(g2d);
 			for(int i=r4e.size()-1;i>=0;++i){ //destroy bullets
 				r4e.remove(i);
 			}
@@ -320,6 +325,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		}
 
 		if(gameState==6){
+			drawHPBar(g2d);
 			drawPlayer(gameState,enemybullets,g2d);
 			drawEnemies(255, 55, 55, r6e, g2d);
 			drawPlayerBullets(g2d);
@@ -347,7 +353,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		
 
 		if(gameState==7&&boss.getHP()>0){
-
+			drawHPBar(g2d);
 			//draw the Boss
 			if(desperate==0){
 				g2d.setColor(new Color(245, 49, 209));
@@ -487,7 +493,12 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	
 
 
+	private void drawHPBar(Graphics g2d){
+		g2d.setColor(Color.BLACK);
+		g2d.drawRect(50,50,72,25);
+		g2d.fillRect(50,50,leon.get(gameState).getHP()*2,25);
 
+	}
 
 
 
@@ -534,7 +545,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		}
 		
 
-		g2d.drawString(String.valueOf(leon.get(room).getHP()),20,600);
+		//g2d.drawString(String.valueOf(leon.get(room).getHP()),20,600);
 
 		
 		
